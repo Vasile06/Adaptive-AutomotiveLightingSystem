@@ -21,6 +21,32 @@ TEST(BUTTONUNITTEST, GIVENVALUE_EXPECTEDSAMEVALUE) {
 	EXPECT_EQ(BT.GetState(), ButtonState::Automatic);
 }
 
+TEST(ManagerLightsUnitTest, ComputeLightsSignalState)
+{
+	// Setup: Given button in X state, illumination and proximity sensor set to Y and Z
+	Button button;
+	button.SetState(ButtonState::Automatic); // Setarea butonului în starea Automatic
+	Sensor_Illumination illumination;
+	illumination.SetValue(1.5); // Setarea senzorului de iluminare la valoarea Y
+	Sensor_Frontal proximity;
+	proximity.SetValue(55.0); // Setarea senzorului de proximitate la valoarea Z
+
+	// Description: Compute lights signal state based on inputs
+	Manager_Lights managerLights;
+	managerLights.SetButton(button.GetState());
+	managerLights.SetIllumination(illumination.GetValue());
+	managerLights.SetFrontal(proximity.GetValue());
+	std::tuple<DisplayState, LightsState> lightsState = managerLights.CalculateLightsState();
+
+	// Pass Criteria: signal is the same as stated in requirements
+	// Verificarea dacă starea semnalului luminilor este conform cerințelor specificate
+	auto expectedDisplayState = Off; // Starea așteptată a afișajului, conform cerințelor
+	auto expectedLightsState = Off;   // Starea așteptată a luminilor, conform cerințelor
+	EXPECT_EQ(std::get<0>(lightsState), expectedDisplayState);
+	EXPECT_EQ(std::get<1>(lightsState), expectedLightsState);
+
+	// Fail Criteria: signal has a different state
+}
 
 
              //Integration Tests
